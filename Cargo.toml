@@ -8,6 +8,7 @@ default-run = "nba-fantasy-draft-cli"
 
 [dependencies]
 dotenv = "0.9.0"
+prettytable-rs = "^0.10"
 reqwest = { version = "0.11", features = ["blocking", "json"] }
 scraper = "0.17.1"
 serde = { version = "1.0", features = ["derive"] }
