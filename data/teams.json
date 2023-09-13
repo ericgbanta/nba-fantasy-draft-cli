@@ -1418,7 +1418,55 @@
       "name": "Ra'anana Maccabi Ra'anana",
       "nbaFranchise": false,
       "nickname": "Maccabi Ra'anana"
+    },
+    {
+      "allStar": false,
+      "city": null,
+      "code": "CNS",
+      "id": 166,
+      "leagues": {
+        "standard": {
+          "conference": "Intl",
+          "division": null
+        }
+      },
+      "logo": null,
+      "name": "Cairns Taipans",
+      "nbaFranchise": false,
+      "nickname": "Taipans"
+    },
+    {
+      "allStar": false,
+      "city": "Auckland",
+      "code": "BNZ",
+      "id": 168,
+      "leagues": {
+        "standard": {
+          "conference": null,
+          "division": null
+        }
+      },
+      "logo": null,
+      "name": "New Zealand Breakers",
+      "nbaFranchise": false,
+      "nickname": "Breakers"
+    },
+    {
+      "allStar": false,
+      "city": null,
+      "code": "",
+      "id": 169,
+      "leagues": {
+        "standard": {
+          "conference": null,
+          "division": null
+        }
+      },
+      "logo": null,
+      "name": "Flamengo",
+      "nbaFranchise": false,
+      "nickname": "Flamengo"
     }
   ],
-  "results": 63
+  "results": 66
 }
