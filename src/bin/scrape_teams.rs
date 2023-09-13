@@ -4,7 +4,6 @@ extern crate reqwest;
 extern crate serde_json;
 
 use dotenv::dotenv;
-use models::{RawTeam, Team};
 use std::env;
 use std::fs;
 

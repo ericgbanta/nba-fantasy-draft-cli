@@ -4,14 +4,14 @@ use std::collections::HashMap;
 // Define the team structure as per the API response
 #[derive(Debug, Deserialize)]
 pub struct RawTeam {
-    pub allStar: bool,
+    pub all_star: bool,
     pub city: String,
     pub code: String,
     pub id: i32,
     pub leagues: HashMap<String, LeagueInfo>,
     pub logo: String,
     pub name: String,
-    pub nbaFranchise: bool,
+    pub nba_franchise: bool,
     pub nickname: String,
 }
 

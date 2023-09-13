@@ -2,6 +2,7 @@
 name = "nba-fantasy-draft-cli"
 version = "0.1.0"
 edition = "2021"
+default-run = "nba-fantasy-draft-cli"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
