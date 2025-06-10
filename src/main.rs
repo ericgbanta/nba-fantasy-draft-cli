@@ -2,36 +2,37 @@ extern crate prettytable;
 extern crate serde;
 extern crate serde_json;
 mod draft;
-mod models; // Add this line
+mod models;
+mod utils; // Add this line
 
-use draft::{Draft, DraftStyle}; // Add this line
+use draft::{Draft, DraftStyle};
 use models::Team;
 use prettytable::{Cell, Row, Table};
 use std::collections::BTreeMap;
-use std::io;
+use utils::{get_number_input, get_user_input, get_yes_no_input}; // Add this line
 
 fn main() {
     let json_data = include_str!("../data/teams.json");
     let parsed: serde_json::Value = serde_json::from_str(json_data).expect("Error parsing JSON");
 
-    // Choose draft style
-    println!("Choose draft style: ");
-    println!("1. Set order");
-    println!("2. Snake");
-    let mut choice = String::new();
-    io::stdin().read_line(&mut choice).unwrap();
-    let choice = choice.trim();
+    // Choose draft style using utils
+    let choice =
+        get_user_input("Choose draft style:\n1. Set order\n2. Snake\nEnter your choice (1 or 2):");
 
     // Store the draft style for later use
-    let draft_style = if choice == "1" {
-        println!("You chose 'Set order' draft style");
-        DraftStyle::SetOrder
-    } else if choice == "2" {
-        println!("You chose 'Snake' draft style");
-        DraftStyle::Snake
-    } else {
-        println!("Invalid choice");
-        return;
+    let draft_style = match choice.as_str() {
+        "1" => {
+            println!("You chose 'Set order' draft style");
+            DraftStyle::SetOrder
+        }
+        "2" => {
+            println!("You chose 'Snake' draft style");
+            DraftStyle::Snake
+        }
+        _ => {
+            println!("Invalid choice");
+            return;
+        }
     };
 
     // Display every team where nbaFranchise is true
@@ -104,14 +105,18 @@ fn main() {
     // Print the table
     table.printstd();
 
-    // Have a player select one team they want to draft for
-    println!("Select a team by entering its ID: ");
-    let mut team_choice = String::new();
-    io::stdin().read_line(&mut team_choice).unwrap();
-    let team_choice: u32 = team_choice
-        .trim()
-        .parse()
-        .expect("Please enter a valid number");
+    // Have a player select one team they want to draft for using utils
+    let team_choice = match get_number_input(
+        "Select a team by entering its ID:",
+        1,
+        nba_teams.len() as u32,
+    ) {
+        Some(choice) => choice,
+        None => {
+            println!("No team selected");
+            return;
+        }
+    };
 
     let selected_team = match nba_teams
         .iter()
@@ -127,28 +132,19 @@ fn main() {
         }
     };
 
-    // START OF NEW DRAFT CODE - Add everything from here down
+    // Ask if user wants to set their draft position using utils
+    let want_to_set_position =
+        get_yes_no_input("Do you want to set the order of where your team drafts? (yes/no):");
 
-    // Ask if user wants to set their draft position
-    println!("Do you want to set the order of where your team drafts? (yes/no): ");
-    let mut position_choice = String::new();
-    io::stdin().read_line(&mut position_choice).unwrap();
-    let position_choice = position_choice.trim().to_lowercase();
-
-    let user_position = if position_choice == "yes" || position_choice == "y" {
-        println!(
-            "Enter a number from 1-{} for your draft position: ",
-            nba_teams.len()
-        );
-        let mut pos_input = String::new();
-        io::stdin().read_line(&mut pos_input).unwrap();
-        match pos_input.trim().parse::<u32>() {
-            Ok(pos) if pos >= 1 && pos <= nba_teams.len() as u32 => Some(pos),
-            _ => {
-                println!("Invalid position, using random order");
-                None
-            }
-        }
+    let user_position = if want_to_set_position {
+        get_number_input(
+            &format!(
+                "Enter a number from 1-{} for your draft position:",
+                nba_teams.len()
+            ),
+            1,
+            nba_teams.len() as u32,
+        )
     } else {
         println!("Random draft position will be assigned to all teams.");
         None

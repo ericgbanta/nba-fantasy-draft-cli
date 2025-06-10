@@ -10,15 +10,21 @@ pub fn get_user_input(prompt: &str) -> String {
 pub fn get_number_input(prompt: &str, min: u32, max: u32) -> Option<u32> {
     loop {
         let input = get_user_input(prompt);
-        match input.parse::<u32>() {
-            Ok(num) if num >= min && num <= max => return Some(num),
-            Ok(_) => println!("Please enter a number between {} and {}", min, max),
-            Err(_) => {
-                if input.to_lowercase() == "no" || input.to_lowercase() == "n" {
-                    return None;
-                }
-                println!("Please enter a valid number or 'no'");
+
+        // Check for "no" response
+        let lower_input = input.to_lowercase();
+        if lower_input == "no" || lower_input == "n" {
+            return None;
+        }
+
+        // Try to parse and validate number
+        if let Ok(num) = input.parse::<u32>() {
+            if num >= min && num <= max {
+                return Some(num);
             }
+            println!("Please enter a number between {} and {}", min, max);
+        } else {
+            println!("Please enter a valid number or 'no'");
         }
     }
 }
