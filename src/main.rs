@@ -35,6 +35,7 @@ fn main() {
     let mut nba_teams: Vec<Team> = teams
         .into_iter()
         .filter(|team| team.nba_franchise == Some(true))
+        .filter(|team| team.all_star == Some(false))
         .collect();
 
     // Assign new ids based on order
