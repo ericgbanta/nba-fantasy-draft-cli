@@ -1,8 +1,10 @@
 extern crate prettytable;
 extern crate serde;
 extern crate serde_json;
-mod models;
+mod draft;
+mod models; // Add this line
 
+use draft::{Draft, DraftStyle}; // Add this line
 use models::Team;
 use prettytable::{Cell, Row, Table};
 use std::collections::BTreeMap;
@@ -20,14 +22,17 @@ fn main() {
     io::stdin().read_line(&mut choice).unwrap();
     let choice = choice.trim();
 
-    if choice == "1" {
+    // Store the draft style for later use
+    let draft_style = if choice == "1" {
         println!("You chose 'Set order' draft style");
+        DraftStyle::SetOrder
     } else if choice == "2" {
         println!("You chose 'Snake' draft style");
+        DraftStyle::Snake
     } else {
         println!("Invalid choice");
         return;
-    }
+    };
 
     // Display every team where nbaFranchise is true
     let teams: Vec<Team> = serde_json::from_value(parsed["response"].clone()).unwrap();
@@ -108,11 +113,60 @@ fn main() {
         .parse()
         .expect("Please enter a valid number");
 
-    match nba_teams
+    let selected_team = match nba_teams
         .iter()
         .find(|&team| team.display_id == Some(team_choice))
     {
-        Some(team) => println!("You chose to draft for: {}", team.name),
-        None => println!("Invalid team choice"),
+        Some(team) => {
+            println!("You chose to draft for: {}", team.name);
+            team.clone()
+        }
+        None => {
+            println!("Invalid team choice");
+            return;
+        }
+    };
+
+    // START OF NEW DRAFT CODE - Add everything from here down
+
+    // Ask if user wants to set their draft position
+    println!("Do you want to set the order of where your team drafts? (yes/no): ");
+    let mut position_choice = String::new();
+    io::stdin().read_line(&mut position_choice).unwrap();
+    let position_choice = position_choice.trim().to_lowercase();
+
+    let user_position = if position_choice == "yes" || position_choice == "y" {
+        println!(
+            "Enter a number from 1-{} for your draft position: ",
+            nba_teams.len()
+        );
+        let mut pos_input = String::new();
+        io::stdin().read_line(&mut pos_input).unwrap();
+        match pos_input.trim().parse::<u32>() {
+            Ok(pos) if pos >= 1 && pos <= nba_teams.len() as u32 => Some(pos),
+            _ => {
+                println!("Invalid position, using random order");
+                None
+            }
+        }
+    } else {
+        println!("Random draft position will be assigned to all teams.");
+        None
+    };
+
+    // Create and set up the draft
+    let mut draft = Draft::new(draft_style, nba_teams);
+    draft.set_draft_order(selected_team.display_id, user_position);
+    draft.generate_picks();
+
+    // Display results
+    draft.print_draft_order();
+
+    if let Some(team_id) = selected_team.display_id {
+        draft.print_team_picks(team_id);
     }
+
+    println!("\n=== DRAFT COMPLETE ===");
+    println!("Total picks generated: {}", draft.picks.len());
+    println!("Draft style: {:?}", draft.style);
 }
