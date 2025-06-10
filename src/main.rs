@@ -1,33 +1,39 @@
 extern crate prettytable;
 extern crate serde;
 extern crate serde_json;
+mod draft;
 mod models;
+mod utils; // Add this line
 
+use draft::{Draft, DraftStyle};
 use models::Team;
 use prettytable::{Cell, Row, Table};
 use std::collections::BTreeMap;
-use std::io;
+use utils::{get_number_input, get_user_input, get_yes_no_input}; // Add this line
 
 fn main() {
     let json_data = include_str!("../data/teams.json");
     let parsed: serde_json::Value = serde_json::from_str(json_data).expect("Error parsing JSON");
 
-    // Choose draft style
-    println!("Choose draft style: ");
-    println!("1. Set order");
-    println!("2. Snake");
-    let mut choice = String::new();
-    io::stdin().read_line(&mut choice).unwrap();
-    let choice = choice.trim();
+    // Choose draft style using utils
+    let choice =
+        get_user_input("Choose draft style:\n1. Set order\n2. Snake\nEnter your choice (1 or 2):");
 
-    if choice == "1" {
-        println!("You chose 'Set order' draft style");
-    } else if choice == "2" {
-        println!("You chose 'Snake' draft style");
-    } else {
-        println!("Invalid choice");
-        return;
-    }
+    // Store the draft style for later use
+    let draft_style = match choice.as_str() {
+        "1" => {
+            println!("You chose 'Set order' draft style");
+            DraftStyle::SetOrder
+        }
+        "2" => {
+            println!("You chose 'Snake' draft style");
+            DraftStyle::Snake
+        }
+        _ => {
+            println!("Invalid choice");
+            return;
+        }
+    };
 
     // Display every team where nbaFranchise is true
     let teams: Vec<Team> = serde_json::from_value(parsed["response"].clone()).unwrap();
@@ -35,6 +41,7 @@ fn main() {
     let mut nba_teams: Vec<Team> = teams
         .into_iter()
         .filter(|team| team.nba_franchise == Some(true))
+        .filter(|team| team.all_star == Some(false))
         .collect();
 
     // Assign new ids based on order
@@ -98,20 +105,64 @@ fn main() {
     // Print the table
     table.printstd();
 
-    // Have a player select one team they want to draft for
-    println!("Select a team by entering its ID: ");
-    let mut team_choice = String::new();
-    io::stdin().read_line(&mut team_choice).unwrap();
-    let team_choice: u32 = team_choice
-        .trim()
-        .parse()
-        .expect("Please enter a valid number");
+    // Have a player select one team they want to draft for using utils
+    let team_choice = match get_number_input(
+        "Select a team by entering its ID:",
+        1,
+        nba_teams.len() as u32,
+    ) {
+        Some(choice) => choice,
+        None => {
+            println!("No team selected");
+            return;
+        }
+    };
 
-    match nba_teams
+    let selected_team = match nba_teams
         .iter()
         .find(|&team| team.display_id == Some(team_choice))
     {
-        Some(team) => println!("You chose to draft for: {}", team.name),
-        None => println!("Invalid team choice"),
+        Some(team) => {
+            println!("You chose to draft for: {}", team.name);
+            team.clone()
+        }
+        None => {
+            println!("Invalid team choice");
+            return;
+        }
+    };
+
+    // Ask if user wants to set their draft position using utils
+    let want_to_set_position =
+        get_yes_no_input("Do you want to set the order of where your team drafts? (yes/no):");
+
+    let user_position = if want_to_set_position {
+        get_number_input(
+            &format!(
+                "Enter a number from 1-{} for your draft position:",
+                nba_teams.len()
+            ),
+            1,
+            nba_teams.len() as u32,
+        )
+    } else {
+        println!("Random draft position will be assigned to all teams.");
+        None
+    };
+
+    // Create and set up the draft
+    let mut draft = Draft::new(draft_style, nba_teams);
+    draft.set_draft_order(selected_team.display_id, user_position);
+    draft.generate_picks();
+
+    // Display results
+    draft.print_draft_order();
+
+    if let Some(team_id) = selected_team.display_id {
+        draft.print_team_picks(team_id);
     }
+
+    println!("\n=== DRAFT COMPLETE ===");
+    println!("Total picks generated: {}", draft.picks.len());
+    println!("Draft style: {:?}", draft.style);
 }

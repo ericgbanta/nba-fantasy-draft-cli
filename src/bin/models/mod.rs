@@ -3,6 +3,7 @@ use std::collections::HashMap;
 
 // Define the team structure as per the API response
 #[derive(Debug, Deserialize)]
+#[allow(dead_code)]
 pub struct RawTeam {
     pub all_star: bool,
     pub city: String,
@@ -16,6 +17,7 @@ pub struct RawTeam {
 }
 
 #[derive(Debug, Deserialize)]
+#[allow(dead_code)]
 pub struct LeagueInfo {
     pub conference: String,
     pub division: Option<String>,
