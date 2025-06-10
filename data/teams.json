@@ -266,7 +266,7 @@
           "division": null
         }
       },
-      "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Detroit_Pistons_primary_logo_2017.png/150px-Detroit_Pistons_primary_logo_2017.png",
+      "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Logo_of_the_Detroit_Pistons.png/300px-Logo_of_the_Detroit_Pistons.png",
       "name": "Detroit Pistons",
       "nbaFranchise": true,
       "nickname": "Pistons"
@@ -510,7 +510,7 @@
           "division": null
         }
       },
-      "logo": "https://upload.wikimedia.org/wikipedia/fr/thumb/1/1c/Miami_Heat_-_Logo.svg/1200px-Miami_Heat_-_Logo.svg.png",
+      "logo": "http://upload.wikimedia.org/wikipedia/en/thumb/f/fb/Miami_Heat_logo.svg/742px-Miami_Heat_logo.svg.png",
       "name": "Miami Heat",
       "nbaFranchise": true,
       "nickname": "Heat"
@@ -538,7 +538,7 @@
           "division": null
         }
       },
-      "logo": "https://upload.wikimedia.org/wikipedia/fr/3/34/Bucks2015.png",
+      "logo": "https://upload.wikimedia.org/wikipedia/en/thumb/4/4a/Milwaukee_Bucks_logo.svg/620px-Milwaukee_Bucks_logo.svg.png",
       "name": "Milwaukee Bucks",
       "nbaFranchise": true,
       "nickname": "Bucks"
@@ -650,7 +650,7 @@
           "division": null
         }
       },
-      "logo": "https://upload.wikimedia.org/wikipedia/fr/thumb/4/4f/Thunder_d%27Oklahoma_City_logo.svg/1200px-Thunder_d%27Oklahoma_City_logo.svg.png",
+      "logo": "https://upload.wikimedia.org/wikipedia/en/thumb/5/5d/Oklahoma_City_Thunder.svg/836px-Oklahoma_City_Thunder.svg.png",
       "name": "Oklahoma City Thunder",
       "nbaFranchise": true,
       "nickname": "Thunder"
@@ -678,7 +678,7 @@
           "division": null
         }
       },
-      "logo": "https://upload.wikimedia.org/wikipedia/fr/b/bd/Orlando_Magic_logo_2010.png",
+      "logo": "https://upload.wikimedia.org/wikipedia/en/thumb/1/10/Orlando_Magic_logo.svg/1024px-Orlando_Magic_logo.svg.png",
       "name": "Orlando Magic",
       "nbaFranchise": true,
       "nickname": "Magic"
@@ -706,7 +706,7 @@
           "division": null
         }
       },
-      "logo": "https://upload.wikimedia.org/wikipedia/fr/4/48/76ers_2016.png",
+      "logo": "https://upload.wikimedia.org/wikipedia/en/thumb/0/0e/Philadelphia_76ers_logo.svg/1024px-Philadelphia_76ers_logo.svg.png",
       "name": "Philadelphia 76ers",
       "nbaFranchise": true,
       "nickname": "76ers"
@@ -940,7 +940,7 @@
       },
       "logo": null,
       "name": "Home Team Stephen A",
-      "nbaFranchise": false,
+      "nbaFranchise": true,
       "nickname": "Team Stephen A"
     },
     {
@@ -1214,7 +1214,7 @@
           "division": null
         }
       },
-      "logo": null,
+      "logo": "https://upload.wikimedia.org/wikipedia/en/thumb/3/32/Adelaide_36ers_logo.svg/471px-Adelaide_36ers_logo.svg.png",
       "name": "Adelaide 36ers",
       "nbaFranchise": false,
       "nickname": "36ers"
@@ -1230,7 +1230,7 @@
           "division": null
         }
       },
-      "logo": null,
+      "logo": "https://upload.wikimedia.org/wikipedia/en/3/30/Beijing_Ducks.png",
       "name": "Beijing Ducks",
       "nbaFranchise": false,
       "nickname": "Ducks"
@@ -1430,7 +1430,7 @@
           "division": null
         }
       },
-      "logo": null,
+      "logo": "https://upload.wikimedia.org/wikipedia/en/thumb/f/f9/Cairns_Taipans_logo.svg/573px-Cairns_Taipans_logo.svg.png",
       "name": "Cairns Taipans",
       "nbaFranchise": false,
       "nickname": "Taipans"
