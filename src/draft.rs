@@ -1,4 +1,4 @@
-use crate::models::{Player, Position, Team, TeamRoster};
+use crate::models::{Player, Team, TeamRoster};
 use rand::seq::SliceRandom;
 use rand::thread_rng;
 use std::collections::HashMap;

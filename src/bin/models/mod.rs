@@ -25,6 +25,7 @@ pub struct LeagueInfo {
 
 // Define the desired team structure for our output
 #[derive(Debug, Serialize)]
+#[allow(dead_code)]
 pub struct Team {
     pub city: String,
     pub code: String,

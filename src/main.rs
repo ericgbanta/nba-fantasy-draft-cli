@@ -86,8 +86,8 @@ fn main() {
             if let Some(division) = leagues["standard"]["division"].as_str() {
                 divisions
                     .entry(division.to_string())
-                    .or_insert(Vec::new())
-                    .push(&team);
+                    .or_default()
+                    .push(team);
             }
         }
     }
