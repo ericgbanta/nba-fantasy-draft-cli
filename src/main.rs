@@ -3,13 +3,41 @@ extern crate serde;
 extern crate serde_json;
 mod draft;
 mod models;
-mod utils; // Add this line
+mod utils;
 
 use draft::{Draft, DraftStyle};
-use models::Team;
+use models::{Player, Position, Team};
 use prettytable::{Cell, Row, Table};
-use std::collections::BTreeMap;
-use utils::{get_number_input, get_user_input, get_yes_no_input}; // Add this line
+use rand::seq::SliceRandom;
+use rand::thread_rng;
+use std::collections::{BTreeMap, HashMap};
+use utils::{get_number_input, get_user_input, get_yes_no_input};
+
+fn load_players() -> Vec<Player> {
+    let player_data = include_str!("../data/player_salaries.json");
+    let salaries: HashMap<String, String> =
+        serde_json::from_str(player_data).expect("Error parsing player salaries");
+
+    let mut players = Vec::new();
+    let positions = Position::all();
+    let mut rng = thread_rng();
+
+    for (name, salary_str) in salaries {
+        // Parse salary, removing any commas
+        let salary = salary_str.replace(',', "").parse::<u64>().unwrap_or(0);
+        
+        // Randomly assign a position for simplicity
+        let position = positions.choose(&mut rng).unwrap().clone();
+        
+        players.push(Player {
+            name,
+            salary,
+            position,
+        });
+    }
+
+    players
+}
 
 fn main() {
     let json_data = include_str!("../data/teams.json");
@@ -155,6 +183,12 @@ fn main() {
     draft.set_draft_order(selected_team.display_id, user_position);
     draft.generate_picks();
 
+    // Load players
+    println!("\nLoading players...");
+    let players = load_players();
+    println!("Loaded {} players", players.len());
+    draft.load_players(players);
+
     // Display results
     draft.print_draft_order();
 
@@ -162,7 +196,48 @@ fn main() {
         draft.print_team_picks(team_id);
     }
 
+    // Conduct the draft with computer picks
+    println!("\n=== CONDUCTING DRAFT ===");
+    println!("Computer teams will now make their picks based on team needs and draft strategy...\n");
+    
+    let num_picks = draft.picks.len();
+    for i in 0..num_picks {
+        let (team_id, team_name, overall, round) = {
+            let pick = &draft.picks[i];
+            (pick.team.display_id, pick.team.name.clone(), pick.overall, pick.round)
+        };
+        
+        if let Some(tid) = team_id {
+            if let Some(player) = draft.computer_pick(tid, round) {
+                println!("Pick #{}: {} selects {} ({:?}, ${})", 
+                    overall, team_name, player.name, player.position, player.salary);
+                draft.picks[i].player = Some(player);
+            }
+        }
+    }
+
+    // Display final rosters
+    println!("\n=== FINAL ROSTERS ===");
+    if let Some(team_id) = selected_team.display_id {
+        if let Some(roster) = draft.get_roster(team_id) {
+            println!("\nYour team ({}):", roster.team.name);
+            let mut sorted_players = roster.players.clone();
+            sorted_players.sort_by_key(|p| p.salary);
+            sorted_players.reverse();
+            
+            for (i, player) in sorted_players.iter().enumerate() {
+                println!("  {}. {} - {:?} (${:})", i + 1, player.name, player.position, player.salary);
+            }
+            
+            let position_counts = roster.get_position_counts();
+            println!("\n  Position breakdown:");
+            for pos in Position::all() {
+                println!("    {:?}: {}", pos, position_counts.get(&pos).unwrap_or(&0));
+            }
+        }
+    }
+
     println!("\n=== DRAFT COMPLETE ===");
-    println!("Total picks generated: {}", draft.picks.len());
+    println!("Total picks made: {}", draft.picks.len());
     println!("Draft style: {:?}", draft.style);
 }
