@@ -147,6 +147,7 @@ fn main() {
         )
     } else {
         println!("Random draft position will be assigned to all teams.");
+        println!("This is a messagee");
         None
     };
 
@@ -165,4 +166,5 @@ fn main() {
     println!("\n=== DRAFT COMPLETE ===");
     println!("Total picks generated: {}", draft.picks.len());
     println!("Draft style: {:?}", draft.style);
+    println!("\n=== ENJOYY! ===");
 }
