@@ -15,3 +15,7 @@ To scrape the latest team data, we've compiled a script that can be run to updat
 ```
 cargo run --bin scrape_teams
 ```
+
+```
+cargo
+```
