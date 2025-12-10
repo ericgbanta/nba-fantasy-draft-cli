@@ -19,6 +19,8 @@ fn main() {
     let choice =
         get_user_input("Choose draft style:\n1. Set order\n2. Snake\nEnter your choice (1 or 2):");
 
+    let are_you_sure = get_user_input("Are you sure?");
+
     // Store the draft style for later use
     let draft_style = match choice.as_str() {
         "1" => {
