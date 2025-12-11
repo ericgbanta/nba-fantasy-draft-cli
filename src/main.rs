@@ -19,6 +19,8 @@ fn main() {
     let choice =
         get_user_input("Choose draft style:\n1. Set order\n2. Snake\nEnter your choice (1 or 2):");
 
+    let are_you_sure = get_user_input("Are you sure?");
+
     // Store the draft style for later use
     let draft_style = match choice.as_str() {
         "1" => {
@@ -136,6 +138,9 @@ fn main() {
     let want_to_set_position =
         get_yes_no_input("Do you want to set the order of where your team drafts? (yes/no):");
 
+    let are_you_sure = 
+        get_yes_no_input("Are you sure?");
+
     let user_position = if want_to_set_position {
         get_number_input(
             &format!(
@@ -147,6 +152,7 @@ fn main() {
         )
     } else {
         println!("Random draft position will be assigned to all teams.");
+        println!("Draft is beggggining now!");
         None
     };
 
